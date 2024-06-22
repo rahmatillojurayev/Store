@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Navbar</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div id="container" class="container">
+    <div class="row">
+        <div class="col align-items-center flex-col sign-up">
+            <div class="form-wrapper align-items-center">
+                <div class="form sign-up">
+                    <div id="popup" class="popup" th:if="${error}" th:text="${error}"></div>
+                    <form th:action="@{/registration}" method="post">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <button type="submit">Sign up</button>
+                        <p>
+                            <span>Already have an account?</span>
+                            <b onclick="toggle()" class="pointer">Sign in here</b>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col align-items-center flex-col sign-in">
+            <div class="form-wrapper align-items-center">
+                <div class="form sign-in">
+                    <form th:action="@{/login}" method="post">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <input type="checkbox" name="remember-me"> Remember Me
+                        <button type="submit">Sign in</button>
+                        <p>
+                            <b>Forgot password?</b>
+                        </p>
+                        <p>
+                            <span>Don't have an account?</span>
+                            <b onclick="toggle()" class="pointer">Sign up here</b>
+                        </p>
+                    </form>
+                </div>
+            </div>
+            <div class="form-wrapper">
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/login.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var popup = document.getElementById('popup');
+        if (popup && popup.textContent.trim().length > 0) {
+            popup.style.display = 'block';
+            setTimeout(function () {
+                popup.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>

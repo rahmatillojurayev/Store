@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <style>
+        .btn-active {
+            background-color: #ffc107 !important;
+            color: black !important;
+        }
+        .hidden {
+            display: none;
+        }
+        .uchBtn {
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .product-image {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .product-image-container {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/YOUR-KIT-ID.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="btn btn-warning text-black col-12 m-2 text-center">
+    <h2 class="text-black">Admin Page</h2>
+</div>
+<div class="row">
+    <div class="col-2">
+        <div class="btn btn-success text-white col-12 text-center">
+            <h3 class="text-white">Categories</h3>
+        </div>
+        <div>
+            <form class="form-inline mb-2" th:action="@{/}" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search Category By Name"
+                       aria-label="Search" name="searchCategory">
+                <button class="btn btn-outline-success my-2 my-sm-0 col-12 mb-2" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+        <div class="category-container">
+            <div class="category-item" th:each="category : ${categories}">
+                <a th:classappend="${currentCategory != null and category.id.equals(currentCategory.id)} ? 'btn-active' : ''"
+                   class="btn btn-primary text-white mb-3 col-12" th:href="|/?categoryId=${category.id}|"
+                   th:text="${category.name}"></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="btn btn-success text-white col-12 text-center">
+            <h3 class="text-white">Products</h3>
+        </div>
+        <div>
+            <form class="form-inline mb-2" th:action="@{/}" method="get">
+                <input class="form-control mr-sm-2" type="hidden" name="categoryId" th:value="${currentCategory?.id}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search Product By Name"
+                       aria-label="Search" name="searchProduct">
+                <button class="btn btn-outline-success my-2 my-sm-0 col-12" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+        <div class="product-container">
+            <div class="product-item" th:each="product : ${products}">
+                <a th:classappend="${currentProduct != null and product.id.equals(currentProduct.id)} ? 'btn-active' : ''"
+                   class="btn btn-primary text-white mb-3 col-12" th:href="|/?productId=${product.id}|"
+                   th:text="${product.name}"></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row">
+            <a href="/income" class="uchBtn btn btn-success text-white col-4 text-center">
+                <div>
+                    <h3 class="text-white">Incomes</h3>
+                </div>
+            </a>
+            <a href="/sales" class="uchBtn btn btn-success text-white col-4 text-center">
+                <div>
+                    <h3 class="text-white">Sales</h3>
+                </div>
+            </a>
+            <div class="uchBtn btn btn-success text-white col-4 text-center" data-content="information-content" onclick="toggleContent(this)">
+                <div>
+                    <h3 class="text-white">Information</h3>
+                </div>
+            </div>
+        </div>
+        <div id="product-container" th:if="${incomes}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Amount</th>
+                    <th>Company Name</th>
+                    <th>Description</th>
+                    <th>Income Price</th>
+                    <th>User</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="income : ${incomes}">
+                    <td th:text="${income.dateFormatted}"></td>
+                    <td th:text="${income.product.name}"></td>
+                    <td th:text="${income.amount}"></td>
+                    <td th:text="${income.companyName}"></td>
+                    <td th:text="${income.description}"></td>
+                    <td th:text="${income.incomePrice}"></td>
+                    <td th:text="${income.user.username}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="information-content" class="hidden">
+            <div th:if="${currentProduct}">
+                <h3>Additional Information</h3>
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="product-image-container">
+                                <img class="product-image" th:src="${currentProduct.image}" alt="Product Image">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${currentProduct.name}"></h5>
+                                <p class="card-text" th:text="${currentProduct.description}"></p>
+                                <a href="/addIncome" class="uchBtn btn btn-success text-white">
+                                    <div><h6 class="text-white">Add Income</h6></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:unless="${currentProduct}">
+                <p>No product selected.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function toggleContent(button) {
+        var contentId = button.getAttribute('data-content');
+        var sections = document.querySelectorAll('#product-container, #information-content');
+        sections.forEach(section => section.classList.add('hidden'));
+        document.getElementById(contentId).classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
